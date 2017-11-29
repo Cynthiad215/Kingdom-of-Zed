@@ -12,6 +12,6 @@ main = do
        input1 <- getLine
        putStrLn "enter value for y: " 
        input2 <- getLine 
-       let x = (read input1 :: Int)
-       let y = (read input2 :: Int)
-       print (rout x y)
+       let x = (read input1 :: [Int])
+       let y = (read input2 :: [Int])
+       print (x, y)
