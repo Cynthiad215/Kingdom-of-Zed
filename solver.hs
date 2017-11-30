@@ -8,6 +8,7 @@ generate n = permutations [1..n]
 solve (top, right, bottom, left) = top
 
 -- Return true if the given board is a valid solution given input
+validate_solution :: (Num a, Eq a) => ([a],[a],[a],[a]) -> [[Int]] -> Bool
 validate_solution (top, right, bottom, left) input = 
   validate_merchants top (top_paths input) &&
   validate_merchants right (right_paths input) &&
