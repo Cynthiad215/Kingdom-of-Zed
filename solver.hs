@@ -78,10 +78,7 @@ validateSolution (top, right, bottom, left) solution =
 -- should return FALSE
 
 -- Return true if the line of posts is valid 
---validatePosts :: (Eq t, Num t, Ord a) => t -> [a] -> a -> Bool
---validatePosts 0 [] lastVisitedPost  
---validatePosts 0 (post:posts) lastVisitedPost
-  
+validatePosts :: (Eq t, Num t, Ord a) => t -> [a] -> a -> Bool
 validatePosts 0 [] lastVisitedPost = True
 validatePosts 0 posts 0 = not $ hasDuplicates posts
 validatePosts 0 (post:posts) lastVisitedPost
