@@ -22,4 +22,9 @@ Given a set of 4×4 merchant clues, return a legal map of Zed, if one exists.
 
 ##### Format
 The clues are given as a 4-tuple of lists, with one list for each side of the grid. The first number corresponds with the top left merchant (i.e., most western on the northern border), and continue in a clockwise direction. The output is a list of lists, where each entry is a row of the map, going from north to south. The example function call below corresponds with the visual example above.
+
+##### Additional Functionalities Implemented:
+- Allow maps of Zed or arbitrary size, i.e. any n×n map for n >= 2.
+- Allow incomplete information. For this option, merchants may withold information from you. If they do, their clue is represented as a 0 (zero).  
+- Display the output as a grid (not a list).
  
