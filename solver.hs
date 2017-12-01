@@ -10,7 +10,9 @@ generate n = concatMap permutations $ choose (permutations [1..n]) n
 -- Solve game board given a 4-tuple containing the number of posts each merchant is to visit
 solve :: ([Int],[Int],[Int],[Int]) -> Maybe [[Int]]
 solve (top, right, bottom, left) = 
-  findValidSolution (top, right, bottom, left) (generate (length top))
+  findValidSolution (top, right, bottom, left) $ generate n
+  where
+    n = length top
 
 -- TEST CASES
 -- solve ([1,2],[2,1],[1,2],[2,1])
