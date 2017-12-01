@@ -1,6 +1,7 @@
 import Data.List
 
 -- Generate all row permutations for gameboard of size n.
+generate :: (Num t, Eq t, Enum t) => t -> [[[t]]]
 generate n = concatMap permutations $ choose (permutations [1..n]) n
   where
     choose _ 0 = [[]]
