@@ -1,5 +1,4 @@
 import Solver
-import System.Console.ANSI
 import System.Exit
       
 -- Start program
