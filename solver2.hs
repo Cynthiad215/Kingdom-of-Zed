@@ -145,18 +145,27 @@ leftPaths rows = reverse rows
 
 
 main = do
-          putStrLn "enter values for the top line [T1,T2]: " 
+          putStrLn "Dimension of grid"
+          input1 <- getLine
+          let dim = (read input1 :: Int)
+          putStrLn "enter values for the top line: " 
           top <- getLine 
           let t1 = (read top :: [Int])
-          putStrLn "enter values for the top line [R1,R2]: " 
+          putStrLn "enter values for the right column: " 
           right <- getLine 
           let r1 = (read right :: [Int])
-          putStrLn "enter values for the top line [B1,B2]: " 
+          putStrLn "enter values for the bottom line: " 
           bottom <- getLine 
           let b1 = (read bottom :: [Int])
-          putStrLn "enter values for the top line [L1,L2]: " 
+          putStrLn "enter values for the left line: " 
           left <- getLine 
           let l1 = (read left :: [Int])
-          print . solve $ (t1, r1, b1, l1)
-          --return (solve (t1, r1, b1, l1)) >>= print
-          
+          if ((isValid t1 dim) && (isValid t1 dim) && (isValid t1 dim) && (isValid t1 dim))
+           then print . solve $ (t1, r1, b1, l1)
+           else do 
+                print ("try again")
+                main
+
+
+isValid [] _ = True;
+isValid (h:t) x = if (elem h [0..x]) then isValid t x else False
