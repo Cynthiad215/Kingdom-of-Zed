@@ -160,7 +160,8 @@ main = do
           putStrLn "enter values for the left line: " 
           left <- getLine 
           let l1 = (read left :: [Int])
-          if ((isValid t1 dim) && (isValid t1 dim) && (isValid t1 dim) && (isValid t1 dim))
+          if ((isValid t1 dim) && (isValid r1 dim) && (isValid b1 dim) && (isValid l1 dim) 
+            && (length t1 == dim) && (length r1 == dim) && (length b1 == dim) && (length l1 == dim))
            then print . solve $ (t1, r1, b1, l1)
            else do 
                 print ("try again")
