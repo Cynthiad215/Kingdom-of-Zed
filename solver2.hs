@@ -157,5 +157,6 @@ main = do
           putStrLn "enter values for the top line [L1,L2]: " 
           left <- getLine 
           let l1 = (read left :: [Int])
-          solve (t1, r1, b1, l1)
+          print . solve $ (t1, r1, b1, l1)
+          --return (solve (t1, r1, b1, l1)) >>= print
           
