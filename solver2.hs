@@ -1,5 +1,6 @@
 import Data.List as List
 import Data.Set as Set
+import Data.Map
 
 -- Generate all row permutations for gameboard of size n.
 generate :: (Num t, Eq t, Enum t) => t -> [[[t]]]
@@ -143,7 +144,7 @@ leftPaths rows = reverse rows
 -- leftPaths [[4,1,3,2],[2,3,4,1],[3,2,1,4],[1,4,2,3]]
 -- should return [[1,4,2,3],[3,2,1,4],[2,3,4,1],[4,1,3,2]]
 
-
+-- main function to run program, input takes arrays ie) [1,2,3] depending on the dimension specified
 main = do
           putStrLn "Dimension of grid"
           input1 <- getLine
@@ -162,11 +163,12 @@ main = do
           let l1 = (read left :: [Int])
           if ((isValid t1 dim) && (isValid r1 dim) && (isValid b1 dim) && (isValid l1 dim) 
             && (length t1 == dim) && (length r1 == dim) && (length b1 == dim) && (length l1 == dim))
-           then print . solve $ (t1, r1, b1, l1)
+           then do
+                print . solve $ (t1, r1, b1, l1)
            else do 
                 print ("try again")
                 main
 
-
+-- Checks input arrays to ensure they have correct input
 isValid [] _ = True;
 isValid (h:t) x = if (elem h [0..x]) then isValid t x else False
