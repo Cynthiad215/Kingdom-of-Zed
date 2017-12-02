@@ -1,7 +1,9 @@
+module Solver where
+
 import Data.List as List
 import Data.Set as Set
 
--- Generate all row permutations for gameboard of size n.
+-- Generate all possible solutions for gameboard of size n.
 generate :: (Num t, Eq t, Enum t) => t -> [[[t]]]
 generate n = concatMap permutations $ choose (permutations [1..n]) n
   where
@@ -9,72 +11,70 @@ generate n = concatMap permutations $ choose (permutations [1..n]) n
     choose [] _ = []
     choose (x:xs) n = (List.map (\ys -> x:ys) (choose xs (n-1))) ++ (choose xs n)
 
--- Solve game board given a 4-tuple containing the number of posts each merchant is to visit
-solve :: ([Int],[Int],[Int],[Int]) -> Maybe [[Int]]
-solve (top, right, bottom, left) = 
-  findValidSolution (top, right, bottom, left) $ generate n
+-- Solve game board given a array containing the number of posts each merchant is to visit
+solve :: [[Int]] -> Maybe [[Int]]
+solve merchants = 
+  findValidSolution merchants $ generate n
   where
-    n = length top
+    n = length $ head merchants
 
 -- TEST CASES
--- solve ([1,2],[2,1],[1,2],[2,1])
+-- solve [[1,2],[2,1],[1,2],[2,1]]
 -- should return [[2,1],[1,2]]
--- solve ([1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1])
+-- solve [[1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]]
 -- should return [[4,1,3,2],[2,3,4,1],[3,2,1,4],[1,4,2,3]]
--- solve ([3,1,2,3],[3,2,1,2],[2,3,3,1],[1,2,3,2])
+-- solve [[3,1,2,3],[3,2,1,2],[2,3,3,1],[1,2,3,2]]
 -- should return [[2,4,3,1],[1,3,4,2],[3,1,2,4],[4,2,1,3]]
--- solve ([2,2,1],[1,2,2],[3,1,2],[2,1,3])
+-- solve [[2,2,1],[1,2,2],[3,1,2],[2,1,3]]
 -- should return [[1,2,3],[3,1,2],[2,3,1]]
--- solve ([0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0])
+-- solve [[0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0]]
 -- should return [[1,4,3,2],[2,3,1,4],[4,1,2,3],[3,2,4,1]]
--- solve ([0,0,3,0],[0,0,2,0],[0,0,4,0],[0,0,3,0])
+-- solve [[0,0,3,0],[0,0,2,0],[0,0,4,0],[0,0,3,0]]
 -- should return [[2,4,1,3],[1,3,2,4],[3,2,4,1],[4,1,3,2]]
 
 -- Find a valid solution given merchant visit numbers and array containing all possible solutions
-findValidSolution :: (Num a, Eq a) => ([a], [a], [a], [a]) -> [[[Int]]] -> Maybe [[Int]]
+findValidSolution :: (Num a, Eq a) => [[a]] -> [[[Int]]] -> Maybe [[Int]]
 findValidSolution merchants [] = Nothing
 findValidSolution merchants (path:paths)
   | validateSolution merchants path = Just path
   | otherwise = findValidSolution merchants paths
 
 -- Return true if the given board is a valid solution given solution
-validateSolution :: (Num a, Eq a) => ([a],[a],[a],[a]) -> [[Int]] -> Bool
-validateSolution (top, right, bottom, left) solution = 
-  validateMerchants top (topPaths solution) &&
-  validateMerchants right (rightPaths solution) &&
-  validateMerchants bottom (bottomPaths solution) &&
-  validateMerchants left (leftPaths solution)
+validateSolution :: (Num a, Eq a) => [[a]] -> [[Int]] -> Bool
+validateSolution merchants solution = 
+  validateMerchants (merchants!!0) (topPaths solution) &&
+  validateMerchants (merchants!!1) (rightPaths solution) &&
+  validateMerchants (merchants!!2) (bottomPaths solution) &&
+  validateMerchants (merchants!!3) (leftPaths solution)
   where
     validateMerchants [] [] = True
     validateMerchants (merchant:merchants) (path:paths) =
       validatePosts merchant path 0 && validateMerchants merchants paths
 
 -- TEST CASES
--- validateSolution ([1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]) [[4,1,3,2],[2,3,4,1],[3,2,1,4],[1,4,2,3]]
+-- validateSolution [[1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]] [[4,1,3,2],[2,3,4,1],[3,2,1,4],[1,4,2,3]]
 -- should return true
--- validateSolution ([1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]) [[4,1,3,2],[2,3,4,1],[4,2,1,3],[1,4,2,3]]
+-- validateSolution ([1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]] [[4,1,3,2],[2,3,4,1],[4,2,1,3],[1,4,2,3]]
 -- should return false
--- validateSolution ([1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]) [[1,2,3,4],[2,1,4,3],[3,4,1,2],[4,3,2,1]]
+-- validateSolution [[1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]] [[1,2,3,4],[2,1,4,3],[3,4,1,2],[4,3,2,1]]
 -- should return false
--- validateSolution ([1,2],[2,1],[1,2],[2,1]) [[2,1],[1,2]]
+-- validateSolution [[1,2],[2,1],[1,2],[2,1]] [[2,1],[1,2]]
 -- should return true
--- validateSolution ([1,2],[2,1],[1,2],[2,1]) [[1,2],[1,2]]
+-- validateSolution [[1,2],[2,1],[1,2],[2,1]] [[1,2],[1,2]]
 -- should return false
--- validateSolution ([2,2,3,4,2,1],[1,5,3,2,2,2],[2,2,1,2,3,4],[3,3,2,2,1,5]) [[1,4,3,2,5,6],[6,2,5,4,3,1],[3,6,2,5,1,4],[5,4,1,3,6,2],[4,5,6,1,2,3],[2,1,3,6,4,5]]
+-- validateSolution [[2,2,3,4,2,1],[1,5,3,2,2,2],[2,2,1,2,3,4],[3,3,2,2,1,5]] [[1,4,3,2,5,6],[6,2,5,4,3,1],[3,6,2,5,1,4],[5,4,1,3,6,2],[4,5,6,1,2,3],[2,1,3,6,4,5]]
 -- should return false
--- validateSolution ([2,2,3,4,2,1],[1,5,3,2,2,2],[2,2,1,2,3,4],[3,3,2,2,1,5]) [[1,4,3,2,5,6],[6,2,5,4,3,1],[3,6,2,5,1,4],[5,4,1,3,6,2],[4,5,6,1,2,3],[2,1,3,6,4,5]]
+-- validateSolution [[1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]] [[4,2,3,1],[1,3,4,2],[2,1,3,4],[1,4,2,3]]
 -- should return false
--- validateSolution ([1,3,2,2],[3,2,1,2],[2,2,1,3],[2,2,3,1]) [[4,2,3,1],[1,3,4,2],[2,1,3,4],[1,4,2,3]]
--- should return false
--- validateSolution ([0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0]) [[1,4,3,2],[2,3,1,4],[4,1,2,3],[3,2,4,1]]
+-- validateSolution [[0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0]] [[1,4,3,2],[2,3,1,4],[4,1,2,3],[3,2,4,1]]
 -- should return true
--- validateSolution ([0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0]) [[1,3,4,2],[2,3,1,4],[4,1,2,3],[3,2,4,1]]
+-- validateSolution [[0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0]] [[1,3,4,2],[2,3,1,4],[4,1,2,3],[3,2,4,1]]
 -- should return false
--- validateSolution ([0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0]) [[1,2,3,4],[2,4,1,3],[4,3,2,1],[3,1,4,2]]
+-- validateSolution [[0,1,2,0],[0,0,0,2],[3,0,3,0],[0,0,0,0]] [[1,2,3,4],[2,4,1,3],[4,3,2,1],[3,1,4,2]]
 -- should return FALSE
--- validateSolution ([0,0,3,0],[0,0,2,0],[0,0,4,0],[0,0,3,0]) [[2,4,1,3],[1,3,2,4],[3,2,4,1],[4,1,3,2]]
+-- validateSolution [[0,0,3,0],[0,0,2,0],[0,0,4,0],[0,0,3,0]] [[2,4,1,3],[1,3,2,4],[3,2,4,1],[4,1,3,2]]
 -- should return true
--- validateSolution ([0,0,3,0],[0,0,2,0],[0,0,4,0],[0,0,3,0]) [[1,4,2,3],[2,3,1,4],[4,2,3,1],[3,1,4,2]]
+-- validateSolution [[0,0,3,0],[0,0,2,0],[0,0,4,0],[0,0,3,0]] [[1,4,2,3],[2,3,1,4],[4,2,3,1],[3,1,4,2]]
 -- should return FALSE
 
 -- Return true if the line of posts is valid 
