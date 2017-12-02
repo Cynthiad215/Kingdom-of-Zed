@@ -68,6 +68,8 @@ rightfn dim tArr = do
                    then do 
                         let rArr = [t, t2]
                         print (tArr, rArr)
+                        let nextBArr = [tArr, rArr]
+                        bottomfn dim nextBArr
                    else do 
                         print ("bad input, start again")
                         rightfn dim tArr
@@ -75,10 +77,27 @@ rightfn dim tArr = do
                   print ("bad input, try again")
                   rightfn dim tArr
 
-
-            
-
-
+bottomfn dim nextBArr = do
+                        putStrLn "enter values for the right top index [B1, _]: " 
+                        top1 <- getLine 
+                        let t = (read top1 :: Int)
+                        if (elem t [0..dim])
+                         then do
+                              let bArr = [t]
+                              putStrLn "enter values for the next right index [_,B2]: " 
+                              top2 <- getLine 
+                              let t2 = (read top2 :: Int)
+                              if (elem t2 [0..dim])
+                               then do 
+                                    let bArr = [t, t2]
+                                    print (nextBArr bArr)
+                              else do 
+                                   print ("bad input, start again")
+                                   bottomfn dim nextBArr
+                           else do
+                                print ("bad input, try again")
+                                bottomfn dim nextBArr
+                                
 topfn2 dim = do
             putStrLn "enter values for the top index: " 
             top1 <- getLine 

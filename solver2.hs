@@ -143,3 +143,19 @@ leftPaths rows = reverse rows
 -- leftPaths [[4,1,3,2],[2,3,4,1],[3,2,1,4],[1,4,2,3]]
 -- should return [[1,4,2,3],[3,2,1,4],[2,3,4,1],[4,1,3,2]]
 
+
+main = do
+          putStrLn "enter values for the top line [T1,T2]: " 
+          top <- getLine 
+          let t1 = (read top :: [Int])
+          putStrLn "enter values for the top line [R1,R2]: " 
+          right <- getLine 
+          let r1 = (read right :: [Int])
+          putStrLn "enter values for the top line [B1,B2]: " 
+          bottom <- getLine 
+          let b1 = (read bottom :: [Int])
+          putStrLn "enter values for the top line [L1,L2]: " 
+          left <- getLine 
+          let l1 = (read left :: [Int])
+          solve (t1, r1, b1, l1)
+          
