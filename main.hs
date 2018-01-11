@@ -1,5 +1,6 @@
 import Solver
 import System.Exit
+import Text.Read
       
 -- Start program
 start :: IO ()
@@ -13,13 +14,17 @@ gatherUserInput :: IO [[Int]]
 gatherUserInput = do
   putStrLn "Please specify a size (between 2 and 4) for the grid."
   gridSize <- getLine
-  let dim = (read gridSize :: Int)
-  if (elem dim [2..4])
-    then do
-      merchants <- getMerchants dim
-      return merchants
-    else
-      die "You entered an invalid grid size."
+  let input = (readMaybe gridSize :: Maybe Int)
+  case input of
+    Just dim ->
+      if (elem dim [2..4])
+        then do
+          merchants <- getMerchants dim
+          return merchants
+        else
+          die "You entered an invalid grid size."
+    Nothing ->
+      die "You entered a value of an invalid type. Only inputs of type Int are allowed."
 
 -- Get merchant information given grid dimensions
 getMerchants :: Int -> IO [[Int]]
